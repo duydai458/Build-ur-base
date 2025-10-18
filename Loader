@@ -1,0 +1,183 @@
+--// Auto Menu GUI v1 (Black-Blue, 🤡 movable)
+
+-- CONFIG
+local refreshRate = 1 -- seconds per InvokeServer
+
+-- SERVICES
+local rs = game:GetService("ReplicatedStorage")
+local remotes = rs:WaitForChild("Remotes")
+local buyFunc = remotes:WaitForChild("Functions"):WaitForChild("BuyStock")
+local toolEvent = remotes:WaitForChild("Events"):WaitForChild("ToolState")
+
+-- FUNCTIONS
+local function buyItem(category, item)
+	buyFunc:InvokeServer(category, item)
+end
+
+local function shootTool()
+	toolEvent:FireServer(true)
+end
+
+-- UI SETUP
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.Name = "AutoMenu"
+
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Size = UDim2.new(0, 250, 0, 300)
+MainFrame.Position = UDim2.new(0.5, -125, 0.5, -150)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Visible = true
+
+local UICorner = Instance.new("UICorner", MainFrame)
+UICorner.CornerRadius = UDim.new(0, 5)
+
+-- Title
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundColor3 = Color3.fromRGB(0, 85, 170)
+Title.Text = "🎡 Circus Auto Buy"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 20
+local UICorner2 = Instance.new("UICorner", Title)
+UICorner2.CornerRadius = UDim.new(0, 5)
+
+-- Tabs
+local TabFrame = Instance.new("Frame", MainFrame)
+TabFrame.Size = UDim2.new(1, 0, 0, 30)
+TabFrame.Position = UDim2.new(0, 0, 0, 40)
+TabFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+
+local defenseTab = Instance.new("TextButton", TabFrame)
+defenseTab.Size = UDim2.new(0.5, 0, 1, 0)
+defenseTab.Text = "Defense"
+defenseTab.BackgroundColor3 = Color3.fromRGB(0, 85, 170)
+defenseTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+defenseTab.Font = Enum.Font.SourceSansBold
+defenseTab.TextSize = 18
+
+local blocksTab = Instance.new("TextButton", TabFrame)
+blocksTab.Size = UDim2.new(0.5, 0, 1, 0)
+blocksTab.Position = UDim2.new(0.5, 0, 0, 0)
+blocksTab.Text = "Blocks"
+blocksTab.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+blocksTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+blocksTab.Font = Enum.Font.SourceSansBold
+blocksTab.TextSize = 18
+
+-- Content Frames
+local DefenseFrame = Instance.new("Frame", MainFrame)
+DefenseFrame.Size = UDim2.new(1, 0, 1, -70)
+DefenseFrame.Position = UDim2.new(0, 0, 0, 70)
+DefenseFrame.BackgroundTransparency = 1
+
+local BlocksFrame = Instance.new("Frame", MainFrame)
+BlocksFrame.Size = UDim2.new(1, 0, 1, -70)
+BlocksFrame.Position = UDim2.new(0, 0, 0, 70)
+BlocksFrame.BackgroundTransparency = 1
+BlocksFrame.Visible = false
+
+-- Template Button Function
+local activeLoops = {}
+
+local function createButton(parent, text, callback)
+	local btn = Instance.new("TextButton", parent)
+	btn.Size = UDim2.new(1, -20, 0, 30)
+	btn.Position = UDim2.new(0, 10, 0, (#parent:GetChildren() - 1) * 35)
+	btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	btn.Text = text
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextSize = 18
+	btn.AutoButtonColor = false
+	local corner = Instance.new("UICorner", btn)
+	corner.CornerRadius = UDim.new(0, 5)
+
+	local running = false
+
+	btn.MouseButton1Click:Connect(function()
+		running = not running
+		if running then
+			btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+			activeLoops[text] = task.spawn(function()
+				while running do
+					callback()
+					task.wait(refreshRate)
+				end
+			end)
+		else
+			btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+			if activeLoops[text] then
+				task.cancel(activeLoops[text])
+				activeLoops[text] = nil
+			end
+		end
+	end)
+end
+
+-- Defense Buttons
+createButton(DefenseFrame, "CircusTurret", function() buyItem("Blocks", "CircusTurret") end)
+createButton(DefenseFrame, "CircusCannon", function() buyItem("Blocks", "CircusCannon") end)
+createButton(DefenseFrame, "DoubleCircusCannon", function() buyItem("Blocks", "DoubleCircusCannon") end)
+createButton(DefenseFrame, "CircusMinigun", function() buyItem("Blocks", "CircusMinigun") end)
+createButton(DefenseFrame, "CircusPlasma", function() buyItem("Blocks", "CircusPlasma") end)
+
+-- Blocks Buttons
+createButton(BlocksFrame, "CircusBlock", function() buyItem("Blocks", "CircusBlock") end)
+createButton(BlocksFrame, "CircusLaserDoor", function() buyItem("Blocks", "CircusLaserDoor") end)
+createButton(BlocksFrame, "Shoot", function() shootTool() end)
+
+-- Tab Switching
+defenseTab.MouseButton1Click:Connect(function()
+	defenseTab.BackgroundColor3 = Color3.fromRGB(0, 85, 170)
+	blocksTab.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	DefenseFrame.Visible = true
+	BlocksFrame.Visible = false
+end)
+
+blocksTab.MouseButton1Click:Connect(function()
+	blocksTab.BackgroundColor3 = Color3.fromRGB(0, 85, 170)
+	defenseTab.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	DefenseFrame.Visible = false
+	BlocksFrame.Visible = true
+end)
+
+-- Minimize Button
+local MinimizeButton = Instance.new("TextButton", MainFrame)
+MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
+MinimizeButton.Position = UDim2.new(1, -35, 0, 5)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(0, 85, 170)
+MinimizeButton.Text = "-"
+MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeButton.Font = Enum.Font.SourceSansBold
+MinimizeButton.TextSize = 20
+local miniCorner = Instance.new("UICorner", MinimizeButton)
+miniCorner.CornerRadius = UDim.new(1, 0)
+
+local Minimized = Instance.new("TextButton", ScreenGui)
+Minimized.Size = UDim2.new(0, 50, 0, 50)
+Minimized.Position = UDim2.new(0.5, -25, 0.5, -25)
+Minimized.Text = "🤡"
+Minimized.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Minimized.TextColor3 = Color3.fromRGB(0, 170, 255)
+Minimized.Font = Enum.Font.SourceSansBold
+Minimized.TextSize = 25
+Minimized.Visible = false
+Minimized.Active = true
+Minimized.Draggable = true
+local mcorner = Instance.new("UICorner", Minimized)
+mcorner.CornerRadius = UDim.new(1, 0)
+
+MinimizeButton.MouseButton1Click:Connect(function()
+	MainFrame.Visible = false
+	Minimized.Visible = true
+end)
+
+Minimized.MouseButton1Click:Connect(function()
+	MainFrame.Visible = true
+	Minimized.Visible = false
+end)
