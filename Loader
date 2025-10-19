@@ -1,4 +1,4 @@
---// Auto Menu GUI v4 (Black-Blue, 🤡 movable)
+--// Auto Menu GUI v1 (rylo2020)
 
 -- CONFIG
 local refreshRate = 1 -- seconds per InvokeServer
