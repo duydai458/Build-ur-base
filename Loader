@@ -1,4 +1,4 @@
---// Auto Menu GUI v1 (Black-Blue, 🤡 movable)
+--// Auto Menu GUI v4 (Black-Blue, 🤡 movable)
 
 -- CONFIG
 local refreshRate = 1 -- seconds per InvokeServer
@@ -8,6 +8,7 @@ local rs = game:GetService("ReplicatedStorage")
 local remotes = rs:WaitForChild("Remotes")
 local buyFunc = remotes:WaitForChild("Functions"):WaitForChild("BuyStock")
 local toolEvent = remotes:WaitForChild("Events"):WaitForChild("ToolState")
+local collectEvent = rs:WaitForChild("ClientModules"):WaitForChild("UIController"):WaitForChild("NetLink"):WaitForChild("Net"):WaitForChild("RE/CollectHarvestingDepositEvent")
 
 -- FUNCTIONS
 local function buyItem(category, item)
@@ -18,13 +19,17 @@ local function shootTool()
 	toolEvent:FireServer(true)
 end
 
+local function collectSoul()
+	collectEvent:FireServer()
+end
+
 -- UI SETUP
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 ScreenGui.Name = "AutoMenu"
 
 local MainFrame = Instance.new("Frame", ScreenGui)
-MainFrame.Size = UDim2.new(0, 250, 0, 300)
-MainFrame.Position = UDim2.new(0.5, -125, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 250, 0, 330)
+MainFrame.Position = UDim2.new(0.5, -125, 0.5, -165)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 MainFrame.Active = true
 MainFrame.Draggable = true
@@ -37,7 +42,7 @@ UICorner.CornerRadius = UDim.new(0, 5)
 local Title = Instance.new("TextLabel", MainFrame)
 Title.Size = UDim2.new(1, 0, 0, 40)
 Title.BackgroundColor3 = Color3.fromRGB(0, 85, 170)
-Title.Text = "🎡 Circus Auto Buy"
+Title.Text = "🎡 Circus Auto Menu"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.SourceSansBold
 Title.TextSize = 20
@@ -101,7 +106,6 @@ local function createButton(parent, text, callback)
 		running = not running
 		if running then
 			btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 			activeLoops[text] = task.spawn(function()
 				while running do
 					callback()
@@ -110,7 +114,6 @@ local function createButton(parent, text, callback)
 			end)
 		else
 			btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 			if activeLoops[text] then
 				task.cancel(activeLoops[text])
 				activeLoops[text] = nil
@@ -130,6 +133,7 @@ createButton(DefenseFrame, "CircusPlasma", function() buyItem("Blocks", "CircusP
 createButton(BlocksFrame, "CircusBlock", function() buyItem("Blocks", "CircusBlock") end)
 createButton(BlocksFrame, "CircusLaserDoor", function() buyItem("Blocks", "CircusLaserDoor") end)
 createButton(BlocksFrame, "Shoot", function() shootTool() end)
+createButton(BlocksFrame, "Soul Halloween", function() collectSoul() end)
 
 -- Tab Switching
 defenseTab.MouseButton1Click:Connect(function()
