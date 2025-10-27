@@ -6,7 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
 if CoreGui:FindFirstChild("Automenu_V2") then
-    CoreGui.ThinGUI_Root:Destroy()
+    CoreGui.Automenu_V2:Destroy()
 end
 
 local Root = Instance.new("ScreenGui")
