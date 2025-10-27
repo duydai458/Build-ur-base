@@ -1,20 +1,23 @@
-Automenu_V2 - rylo2020
+-- Auto Menu V2 - Full Chapter + Mics
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local CoreGui = game:GetService("CoreGui")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-if CoreGui:FindFirstChild("Automenu_V2") then
-    CoreGui.Automenu_V2:Destroy()
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Destroy old GUI if exists
+if PlayerGui:FindFirstChild("AutoMenuV2") then
+    PlayerGui.AutoMenuV2:Destroy()
 end
 
+-- Root GUI
 local Root = Instance.new("ScreenGui")
-Root.Name = "Automenu_V2"
+Root.Name = "AutoMenuV2"
 Root.ResetOnSpawn = false
 Root.IgnoreGuiInset = true
-Root.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-Root.Parent = CoreGui
+Root.Parent = PlayerGui
 
 -- Background
 local background = Instance.new("Frame")
@@ -24,7 +27,7 @@ background.BackgroundTransparency = 1
 background.ZIndex = 1
 background.Parent = Root
 
--- Panels
+-- Panel factory
 local function makePanel(name,pos,size)
     local f=Instance.new("Frame")
     f.Name=name
@@ -88,7 +91,6 @@ local function createLeftButton(parent,text,yOffset)
     btn.Size=UDim2.new(0.9,0,0,40)
     btn.Position=UDim2.new(0.05,0,0,yOffset)
     btn.BackgroundColor3=Color3.fromRGB(59,31,122)
-    btn.BackgroundTransparency=0
     btn.AutoButtonColor=false
     btn.Text=text
     btn.TextColor3=Color3.fromRGB(255,255,255)
@@ -143,7 +145,6 @@ local function createToggle(name)
     local btn=Instance.new("TextButton")
     btn.Size=UDim2.new(1,-10,0,44)
     btn.BackgroundColor3=Color3.fromRGB(80,60,180)
-    btn.BackgroundTransparency=0
     btn.Text=name
     btn.Font=Enum.Font.Gotham
     btn.TextSize=16
@@ -168,7 +169,6 @@ end
 -- CHAPTER ITEMS + MICS
 -- =======================
 local chapterItems = {
-    -- Chapter 1-4 đầy đủ giống trước
     ["Chapter 1"] = {
         {"MinigunTurret", {"Blocks","MinigunTurret"}},
         {"Flamethrower", {"Blocks","Flamethrower"}},
@@ -250,7 +250,7 @@ local chapterItems = {
             local args={true}
             ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("ToolState"):FireServer(unpack(args))
         end},
-        {"AutoJump", "toggle"} -- chỉ định toggle, logic AutoJump riêng
+        {"AutoJump", "toggle"}
     }
 }
 
@@ -262,7 +262,7 @@ local function createTogglesForChapter(chap)
     for _,v in ipairs(scroll:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
     toggles={}
     toggleStates[chap]=toggleStates[chap] or {}
-    for _,item in ipairs(chapterItems[chap]) do
+    for _,item in ipairs(chapterItems[chap] or {}) do
         local name,val=item[1],item[2]
         toggleStates[chap][name]=toggleStates[chap][name] or false
         local btn=createToggle(name)
@@ -297,7 +297,7 @@ spawn(function()
             for name,active in pairs(togs) do
                 if active then
                     local val
-                    for _,v in ipairs(chapterItems[chap]) do
+                    for _,v in ipairs(chapterItems[chap] or {}) do
                         if v[1]==name then val=v[2]; break end
                     end
                     if val then
@@ -316,17 +316,14 @@ spawn(function()
     end
 end)
 
--- AutoJump (5 giây/lần, toggle bật/tắt)
+-- AutoJump (5 giây/lần)
 spawn(function()
-    local LocalPlayer = Players.LocalPlayer
     while true do
         if toggleStates["Mics"] and toggleStates["Mics"]["AutoJump"] then
             local char = LocalPlayer.Character
             if char then
                 local hum = char:FindFirstChildOfClass("Humanoid")
-                if hum then
-                    hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                end
+                if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
             end
         end
         task.wait(5)
@@ -351,6 +348,7 @@ icon.MouseButton1Click:Connect(function()
     if guiVisible then hideGUI() else showGUI() end
 end)
 
+-- Icon drag
 do
     local dragging=false
     local dragStart,startPos
