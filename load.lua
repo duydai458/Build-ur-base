@@ -1,16 +1,16 @@
-Auto menu V2 by rylo2020
+Automenu_V2 - rylo2020
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-if CoreGui:FindFirstChild("ThinGUI_Root") then
+if CoreGui:FindFirstChild("Automenu_V2") then
     CoreGui.ThinGUI_Root:Destroy()
 end
 
 local Root = Instance.new("ScreenGui")
-Root.Name = "ThinGUI_Root"
+Root.Name = "Automenu_V2"
 Root.ResetOnSpawn = false
 Root.IgnoreGuiInset = true
 Root.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
