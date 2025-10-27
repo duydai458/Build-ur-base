@@ -1,4 +1,4 @@
---// ThinGUI_Root - Full Chapter + Mics Auto Buy + Auto Jump
+Auto menu V2 by rylo2020
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
