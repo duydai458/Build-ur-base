@@ -1,4 +1,4 @@
--- Auto Menu V2 - Full Chapter + Mics
+-- Auto Menu V2 - Full Chapter + Mics (Updated with CircusWedge & CircusStair)
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
@@ -229,7 +229,9 @@ local chapterItems = {
         {"CircusPlasma", {"Blocks","CircusPlasma"}},
         {"CircusBlock", {"Blocks","CircusBlock"}},
         {"CircusLaserDoor", {"Blocks","CircusLaserDoor"}},
-        {"CircusTurret", {"Blocks","CircusTurret"}}
+        {"CircusTurret", {"Blocks","CircusTurret"}},
+        {"CircusWedge", {"Blocks","CircusWedge"}}, -- ✅ thêm mới
+        {"CircusStair", {"Blocks","CircusStair"}}   -- ✅ thêm mới
     },
     ["Mics"] = {
         {"AbilityClaim", function()
