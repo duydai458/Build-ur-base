@@ -1,4 +1,4 @@
--- Auto Menu V2 - Full Chapter + Mics (Updated with CircusWedge & CircusStair)
+-- Auto Menu V2 - Full Chapter 1–5 + Mics (FINAL BUILD)
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
@@ -7,7 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- Destroy old GUI if exists
+-- Destroy old GUI
 if PlayerGui:FindFirstChild("AutoMenuV2") then
     PlayerGui.AutoMenuV2:Destroy()
 end
@@ -81,7 +81,7 @@ local function hideGUI()
 end
 
 -- LEFT PANEL
-local chapters={"Chapter 1","Chapter 2","Chapter 3","Chapter 4","Mics"}
+local chapters={"Chapter 1","Chapter 2","Chapter 3","Chapter 4","Chapter 5","Mics"}
 local leftButtons={}
 local selectedLeft=nil
 local currentChapter="Chapter 1"
@@ -96,16 +96,12 @@ local function createLeftButton(parent,text,yOffset)
     btn.TextColor3=Color3.fromRGB(255,255,255)
     btn.Font=Enum.Font.Gotham
     btn.TextSize=16
-    btn.TextXAlignment=Enum.TextXAlignment.Center
-    btn.TextYAlignment=Enum.TextYAlignment.Center
     btn.ZIndex=6
     btn.Parent=parent
     Instance.new("UICorner",btn).CornerRadius=UDim.new(0,8)
     local stroke=Instance.new("UIStroke",btn)
     stroke.Color=Color3.fromRGB(140,110,255)
     stroke.Thickness=1.2
-    stroke.Transparency=0.18
-    stroke.ApplyStrokeMode=Enum.ApplyStrokeMode.Border
     return btn
 end
 
@@ -125,7 +121,6 @@ title.Text="Auto Buy / Mics"
 title.Font=Enum.Font.Gotham
 title.TextSize=18
 title.TextColor3=Color3.fromRGB(255,255,255)
-title.TextXAlignment=Enum.TextXAlignment.Center
 title.ZIndex=6
 title.Parent=RightPanel
 
@@ -133,10 +128,10 @@ local scroll=Instance.new("ScrollingFrame")
 scroll.Size=UDim2.new(1,-20,1,-64)
 scroll.Position=UDim2.new(0,10,0,50)
 scroll.BackgroundTransparency=1
-scroll.BorderSizePixel=0
 scroll.ScrollBarThickness=6
 scroll.AutomaticCanvasSize=Enum.AutomaticSize.Y
 scroll.Parent=RightPanel
+
 local listLayout=Instance.new("UIListLayout",scroll)
 listLayout.Padding=UDim.new(0,8)
 listLayout.SortOrder=Enum.SortOrder.LayoutOrder
@@ -149,25 +144,13 @@ local function createToggle(name)
     btn.Font=Enum.Font.Gotham
     btn.TextSize=16
     btn.TextColor3=Color3.fromRGB(255,255,255)
-    btn.Parent=scroll
     btn.ZIndex=7
+    btn.Parent=scroll
     Instance.new("UICorner",btn).CornerRadius=UDim.new(0,10)
-    local stroke=Instance.new("UIStroke",btn)
-    stroke.Color=Color3.fromRGB(200,180,255)
-    stroke.Transparency=0.35
-    stroke.Thickness=1
-    btn.MouseEnter:Connect(function()
-        TweenService:Create(btn,TweenInfo.new(0.12),{BackgroundTransparency=0}):Play()
-    end)
-    btn.MouseLeave:Connect(function()
-        TweenService:Create(btn,TweenInfo.new(0.12),{BackgroundTransparency=0}):Play()
-    end)
     return btn
 end
 
--- =======================
--- CHAPTER ITEMS + MICS
--- =======================
+-- CHAPTER ITEMS (FULL)
 local chapterItems = {
     ["Chapter 1"] = {
         {"MinigunTurret", {"Blocks","MinigunTurret"}},
@@ -181,6 +164,7 @@ local chapterItems = {
         {"Block", {"Blocks","Block"}},
         {"MetalSpikes", {"Blocks","MetalSpikes"}}
     },
+
     ["Chapter 2"] = {
         {"HeavyTurret", {"Blocks","HeavyTurret"}},
         {"MinigunMK2Turret", {"Blocks","MinigunMK2Turret"}},
@@ -201,6 +185,7 @@ local chapterItems = {
         {"MagmaWedge", {"Blocks","MagmaWedge"}},
         {"MagmaLaserDoor", {"Blocks","MagmaLaserDoor"}}
     },
+
     ["Chapter 3"] = {
         {"CannonTurret", {"Blocks","CannonTurret"}},
         {"DoubleCannonTurret", {"Blocks","DoubleCannonTurret"}},
@@ -223,6 +208,7 @@ local chapterItems = {
         {"NoobWindow", {"Blocks","NoobWindow"}},
         {"NoobLaserDoor", {"Blocks","NoobLaserDoor"}}
     },
+
     ["Chapter 4"] = {
         {"DoubleCircusCannon", {"Blocks","DoubleCircusCannon"}},
         {"CircusMinigun", {"Blocks","CircusMinigun"}},
@@ -230,29 +216,45 @@ local chapterItems = {
         {"CircusBlock", {"Blocks","CircusBlock"}},
         {"CircusLaserDoor", {"Blocks","CircusLaserDoor"}},
         {"CircusTurret", {"Blocks","CircusTurret"}},
-        {"CircusWedge", {"Blocks","CircusWedge"}}, -- ✅ thêm mới
-        {"CircusStair", {"Blocks","CircusStair"}}   -- ✅ thêm mới
+        {"CircusWedge", {"Blocks","CircusWedge"}},
+        {"CircusStair", {"Blocks","CircusStair"}}
     },
+
+    ["Chapter 5"] = {
+        {"ArcticTurret", {"Blocks","ArcticTurret"}},
+        {"DoubleArcticTurret", {"Blocks","DoubleArcticTurret"}},
+        {"ArcticSnowthrower", {"Blocks","ArcticSnowthrower"}},
+        {"ArcticMinigunTurret", {"Blocks","ArcticMinigunTurret"}},
+        {"ArcticCrystal", {"Blocks","ArcticCrystal"}},
+        {"GlacierBlock", {"Blocks","GlacierBlock"}},
+        {"IceBlock", {"Blocks","IceBlock"}},
+        {"GlacierLaserDoor", {"Blocks","GlacierLaserDoor"}},
+        {"IceLaserDoor", {"Blocks","IceLaserDoor"}},
+        {"GlacierStair", {"Blocks","GlacierStair"}},
+        {"GlacierWedge", {"Blocks","GlacierWedge"}},
+        {"IceWedge", {"Blocks","IceWedge"}},
+        {"IceStair", {"Blocks","IceStair"}}
+    },
+
     ["Mics"] = {
         {"AbilityClaim", function()
             local net=ReplicatedStorage:WaitForChild("ClientModules"):WaitForChild("UIController"):WaitForChild("NetLink"):WaitForChild("Net")
-            local claimEvent=net:WaitForChild("RE/ClaimFreeAbilityCard")
-            claimEvent:FireServer()
+            net:WaitForChild("RE/ClaimFreeAbilityCard"):FireServer()
         end},
+
         {"HalloweenSoul", function()
             local net=ReplicatedStorage:WaitForChild("ClientModules"):WaitForChild("UIController"):WaitForChild("NetLink"):WaitForChild("Net")
-            local collectSoulEvent=net:WaitForChild("RE/CollectHarvestingDepositEvent")
-            local submitSoulEvent=net:WaitForChild("RE/SoulHarvestingDepositEvent")
             pcall(function()
-                collectSoulEvent:FireServer()
-                submitSoulEvent:FireServer()
+                net:WaitForChild("RE/CollectHarvestingDepositEvent"):FireServer()
+                net:WaitForChild("RE/SoulHarvestingDepositEvent"):FireServer()
             end)
         end},
+
         {"AutoShoot", function()
-            local args={true}
-            ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("ToolState"):FireServer(unpack(args))
+            ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("ToolState"):FireServer(true)
         end},
-        {"AutoJump", "toggle"}
+
+        {"AutoJump","toggle"}
     }
 }
 
@@ -264,17 +266,20 @@ local function createTogglesForChapter(chap)
     for _,v in ipairs(scroll:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
     toggles={}
     toggleStates[chap]=toggleStates[chap] or {}
+
     for _,item in ipairs(chapterItems[chap] or {}) do
         local name,val=item[1],item[2]
         toggleStates[chap][name]=toggleStates[chap][name] or false
+
         local btn=createToggle(name)
-        btn.Parent=scroll
         btn.BackgroundColor3 = toggleStates[chap][name] and Color3.fromRGB(60,200,60) or Color3.fromRGB(80,60,180)
+
         btn.MouseButton1Click:Connect(function()
             toggleStates[chap][name]=not toggleStates[chap][name]
             local newColor=toggleStates[chap][name] and Color3.fromRGB(60,200,60) or Color3.fromRGB(80,60,180)
-            TweenService:Create(btn,TweenInfo.new(0.22,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundColor3=newColor}):Play()
+            TweenService:Create(btn,TweenInfo.new(0.22),{BackgroundColor3=newColor}):Play()
         end)
+
         toggles[name]=btn
     end
 end
@@ -292,7 +297,7 @@ for _,btn in ipairs(leftButtons) do
     end)
 end
 
--- Auto run toggles (1s interval)
+-- Auto Buy Loop
 spawn(function()
     while true do
         for chap,togs in pairs(toggleStates) do
@@ -300,12 +305,12 @@ spawn(function()
                 if active then
                     local val
                     for _,v in ipairs(chapterItems[chap] or {}) do
-                        if v[1]==name then val=v[2]; break end
+                        if v[1]==name then val=v[2] break end
                     end
                     if val then
                         if typeof(val)=="table" then
                             pcall(function()
-                                ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Functions"):WaitForChild("BuyStock"):InvokeServer(unpack(val))
+                                ReplicatedStorage.Remotes.Functions.BuyStock:InvokeServer(unpack(val))
                             end)
                         elseif typeof(val)=="function" then
                             pcall(val)
@@ -318,7 +323,7 @@ spawn(function()
     end
 end)
 
--- AutoJump (5 giây/lần)
+-- Auto Jump
 spawn(function()
     while true do
         if toggleStates["Mics"] and toggleStates["Mics"]["AutoJump"] then
@@ -335,30 +340,23 @@ end)
 -- ICON
 local icon=Instance.new("TextButton")
 icon.Size=UDim2.new(0,50,0,50)
-icon.AnchorPoint=Vector2.new(0,0)
 icon.Text="⚙️"
 icon.Font=Enum.Font.Gotham
 icon.TextSize=22
-icon.TextColor3=Color3.fromRGB(0,0,0)
 icon.BackgroundColor3=Color3.fromRGB(255,223,0)
-icon.BorderSizePixel=0
 icon.ZIndex=1000
 icon.Parent=Root
 Instance.new("UICorner",icon).CornerRadius=UDim.new(1,0)
 icon.Position=UDim2.new(1,-80,0,40)
+
 icon.MouseButton1Click:Connect(function()
     if guiVisible then hideGUI() else showGUI() end
 end)
 
--- Icon drag
+-- Drag icon
 do
     local dragging=false
     local dragStart,startPos
-    local function clamp(x,y)
-        local screen=workspace.CurrentCamera.ViewportSize
-        local w,h=icon.AbsoluteSize.X,icon.AbsoluteSize.Y
-        return math.clamp(x,0,screen.X-w),math.clamp(y,0,screen.Y-h)
-    end
     icon.InputBegan:Connect(function(input)
         if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
             dragging=true
@@ -372,10 +370,10 @@ do
     UserInputService.InputChanged:Connect(function(input)
         if dragging and (input.UserInputType==Enum.UserInputType.MouseMovement or input.UserInputType==Enum.UserInputType.Touch) then
             local delta=input.Position-dragStart
-            local newX=startPos.X.Offset+delta.X
-            local newY=startPos.Y.Offset+delta.Y
-            newX,newY=clamp(newX,newY)
-            icon.Position=UDim2.new(0,newX,0,newY)
+            icon.Position=UDim2.new(
+                0, startPos.X.Offset + delta.X,
+                0, startPos.Y.Offset + delta.Y
+            )
         end
     end)
 end
